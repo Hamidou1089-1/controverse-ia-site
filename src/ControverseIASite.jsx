@@ -1,15 +1,66 @@
 import React, { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
-import { Network, ArrowUp, ArrowDown, Calendar, Users, Map, FileText, Filter, ChevronRight, Eye, TrendingUp, Globe, Shield, Briefcase, Users as UsersGroup, Scale } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+import { Network, ArrowUp, ArrowDown, Calendar, Users, Map, FileText, Filter, ChevronRight, Eye, TrendingUp, Globe, Shield, Briefcase, Users as UsersGroup, Scale, Quote, ExternalLink } from 'lucide-react';
+import NetworkGraph from "./components/NetworkGraph";
 
-// Données d'exemple pour la chronologie
+// Données d'exemple pour la chronologie - enrichies avec des descriptions plus détaillées
 const timelineData = [
-    { date: 'Avril 2021', evenement: 'Proposition initiale de l\'AI Act par la Commission européenne', impact: 75 },
-    { date: 'Juin 2022', evenement: 'Débats au Parlement européen sur la souveraineté numérique', impact: 60 },
-    { date: 'Novembre 2022', evenement: 'Lancement de ChatGPT et intensification du débat public', impact: 90 },
-    { date: 'Février 2023', evenement: 'Prise de position des États membres sur la régulation de l\'IA', impact: 70 },
-    { date: 'Décembre 2023', evenement: 'Accord sur l\'AI Act', impact: 95 },
-    { date: 'Juin 2024', evenement: 'Début de la mise en application de certaines dispositions', impact: 85 },
+    {
+        date: 'Juin 2017',
+        evenement: 'Publication du papier de recherche "Attention is All You Need" par Google',
+        impact: 95,
+        description: 'Google publie un article introduisant l\'architecture Transformer, qui révolutionne le traitement du langage naturel et jette les bases des modèles d\'IA générative qui domineront plus tard le marché.',
+        source: 'https://arxiv.org/abs/1706.03762'
+    },
+    {
+        date: 'Avril 2021',
+        evenement: 'Proposition initiale de l\'AI Act par la Commission européenne',
+        impact: 75,
+        description: 'La Commission européenne présente sa proposition d\'AI Act, première tentative mondiale de réguler l\'intelligence artificielle de manière globale, basée sur une approche par niveaux de risque. Cette initiative positionne l\'UE comme pionnière de la régulation de l\'IA.',
+        source: 'https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX:52021PC0206'
+    },
+    {
+        date: 'Juin 2022',
+        evenement: 'Débats au Parlement européen sur la souveraineté numérique',
+        impact: 60,
+        description: 'Les eurodéputés débattent de l\'importance d\'une autonomie stratégique dans les technologies numériques face aux géants américains et chinois. Émergence du concept de "souveraineté numérique européenne" comme pilier de la stratégie européenne.',
+        source: 'https://www.europarl.europa.eu/doceo/document/TA-9-2022-0252_FR.html'
+    },
+    {
+        date: 'Novembre 2022',
+        evenement: 'Lancement de ChatGPT et intensification du débat public',
+        impact: 90,
+        description: 'Le lancement de ChatGPT par OpenAI bouleverse le débat public en démontrant les capacités avancées de l\'IA générative, accélérant l\'urgence d\'une régulation adaptée et soulevant des questions sur le retard européen en matière d\'IA de pointe.',
+        source: 'https://openai.com/blog/chatgpt'
+    },
+    {
+        date: 'Février 2023',
+        evenement: 'Prise de position des États membres sur la régulation de l\'IA',
+        impact: 70,
+        description: 'Les États membres de l\'UE expriment leurs positions sur la régulation de l\'IA, révélant des tensions entre pays privilégiant l\'innovation et ceux insistant davantage sur les protections et garde-fous éthiques.',
+        source: 'https://www.consilium.europa.eu/fr/press/press-releases/2023/02/03/artificial-intelligence-act-council-calls-for-promoting-safe-ai-that-respects-fundamental-rights/'
+    },
+    {
+        date: 'Décembre 2023',
+        evenement: 'Accord sur l\'AI Act',
+        impact: 95,
+        description: 'Accord historique sur l\'AI Act européen, introduisant un cadre réglementaire inédit qui catégorise les systèmes d\'IA selon leur niveau de risque et impose des obligations proportionnées. Cette adoption marque un tournant mondial dans la régulation de l\'IA.',
+        source: 'https://www.consilium.europa.eu/fr/press/press-releases/2023/12/09/artificial-intelligence-act-council-and-parliament-strike-a-deal-on-the-first-worldwide-rules-for-ai/'
+    },
+    {
+        date: 'Juin 2024',
+        evenement: 'Début de la mise en application de certaines dispositions',
+        impact: 85,
+        description: 'Début de la mise en œuvre progressive des premières dispositions de l\'AI Act, avec des périodes de transition pour permettre aux entreprises et institutions de s\'adapter. Les autorités nationales de contrôle commencent à se structurer et à se coordonner.',
+        source: 'https://digital-strategy.ec.europa.eu/en/policies/european-approach-artificial-intelligence'
+    },
+    {
+        date: 'Février 2025',
+        evenement: 'Sommet européen sur la souveraineté de l\'IA à Bruxelles',
+        impact: 70,
+        description: 'Réunion de haut niveau rassemblant les 27 pays membres de l\'UE, institutions européennes, entreprises et chercheurs pour définir une stratégie commune sur la souveraineté numérique et l\'IA, aboutissant à l\'adoption d\'une déclaration commune.',
+        source: 'https://digital-strategy.ec.europa.eu/en'
+    },
 ];
 
 // Données enrichies pour les acteurs
@@ -31,6 +82,20 @@ const acteursData = [
             { nom: 'Ministère de l\'Économie', role: 'Promotion de l\'innovation' },
             { nom: 'Ministère des Armées', role: 'Applications défensives de l\'IA' },
             { nom: 'CNIL', role: 'Protection des données personnelles' }
+        ],
+        citations: [
+            {
+                texte: "L'Europe ne peut pas se contenter d'être un consommateur de technologies conçues ailleurs. Notre souveraineté numérique est un enjeu clé pour les années à venir.",
+                auteur: "Emmanuel Macron",
+                source: "Discours sur l'IA, VivaTech 2023",
+                url: "https://www.elysee.fr/emmanuel-macron/2023/06/15/discours-du-president-emmanuel-macron-au-salon-vivatech"
+            },
+            {
+                texte: "La régulation de l'intelligence artificielle doit conjuguer innovation et protection, sans céder aux excès ni d'un côté ni de l'autre.",
+                auteur: "Bruno Le Maire",
+                source: "Intervention au Forum économique de Davos, janvier 2023",
+                url: "https://www.economie.gouv.fr/bruno-le-maire-davos-2023"
+            }
         ]
     },
     {
@@ -50,6 +115,20 @@ const acteursData = [
             { nom: 'Startups IA françaises', role: 'Recherche et innovation' },
             { nom: 'Grands groupes industriels', role: 'Applications sectorielles' },
             { nom: 'Big Tech européennes', role: 'Services cloud et infrastructures' }
+        ],
+        citations: [
+            {
+                texte: "L'Europe doit trouver un équilibre entre régulation et innovation, et ne pas créer un environnement où il devient difficile de développer de nouvelles technologies.",
+                auteur: "Alexandre Lebrun",
+                source: "Fondateur de Nabla, Conférence AI for Good 2023",
+                url: "https://aiforgood.itu.int/"
+            },
+            {
+                texte: "Nous avons besoin d'un cadre réglementaire qui nous permette d'être compétitifs à l'échelle mondiale, sans sacrifier nos valeurs européennes.",
+                auteur: "Rodolphe Belmer",
+                source: "PDG d'Atos, Forum InnovAI Europe 2023",
+                url: "https://www.atos.net/fr/"
+            }
         ]
     },
     {
@@ -69,6 +148,20 @@ const acteursData = [
             { nom: 'Associations de consommateurs', role: 'Protection des utilisateurs' },
             { nom: 'Syndicats', role: 'Impact sur l\'emploi' },
             { nom: 'ONG numériques', role: 'Défense des libertés fondamentales' }
+        ],
+        citations: [
+            {
+                texte: "La transparence des algorithmes et le contrôle démocratique des systèmes d'IA sont des conditions essentielles pour préserver nos droits fondamentaux à l'ère numérique.",
+                auteur: "La Quadrature du Net",
+                source: "Communiqué sur l'AI Act, décembre 2023",
+                url: "https://www.laquadrature.net/"
+            },
+            {
+                texte: "L'IA doit être un outil d'émancipation collective et non un instrument de renforcement des inégalités ou de surveillance généralisée.",
+                auteur: "CNIL",
+                source: "Rapport sur l'IA et les données personnelles, 2023",
+                url: "https://www.cnil.fr/fr/intelligence-artificielle"
+            }
         ]
     },
     {
@@ -88,77 +181,89 @@ const acteursData = [
             { nom: 'Universités', role: 'Formation et recherche fondamentale' },
             { nom: 'Instituts spécialisés', role: 'R&D appliquée' },
             { nom: 'Comités d\'éthique', role: 'Cadrage normatif' }
+        ],
+        citations: [
+            {
+                texte: "La recherche en IA doit être basée sur des principes d'ouverture et de collaboration, tout en intégrant une réflexion éthique permanente sur les impacts sociétaux.",
+                auteur: "Inria",
+                source: "Plan stratégique IA, 2023",
+                url: "https://www.inria.fr/fr/intelligence-artificielle-plan-strategique"
+            },
+            {
+                texte: "L'Europe peut et doit définir sa propre voie en matière d'IA, fondée sur l'excellence scientifique et des valeurs fortes de respect des droits humains.",
+                auteur: "CNRS",
+                source: "Position sur l'IA responsable, 2022",
+                url: "https://www.cnrs.fr/fr/intelligence-artificielle"
+            }
         ]
     }
 ];
 
-// Données pour les intersections entre acteurs (pour le diagramme de Venn)
-const intersectionsData = [
+// Données pour les interactions entre acteurs
+const interactionsData = [
     {
-        id: 'etat-entreprises',
-        acteurs: ['etat', 'entreprises'],
-        points_communs: [
-            'Développement d\'une IA compétitive à l\'échelle mondiale',
-            'Protection des données stratégiques françaises',
-            'Création d\'emplois qualifiés dans le secteur'
+        acteur1: 'etat',
+        acteur2: 'entreprises',
+        description: "L'État français et les entreprises tech collaborent pour développer l'écosystème d'IA nationale, mais des tensions persistent concernant le niveau optimal de régulation. Les entreprises demandent plus de flexibilité tandis que l'État insiste sur la protection des valeurs françaises et européennes.",
+        exemples: [
+            "Plan national pour l'IA avec financements publics pour les startups",
+            "Débats sur l'application de l'AI Act aux PME innovantes",
+            "Partenariats public-privé sur des projets d'IA stratégiques"
         ]
     },
     {
-        id: 'etat-citoyens',
-        acteurs: ['etat', 'citoyens'],
-        points_communs: [
-            'Protection des citoyens contre les abus potentiels',
-            'Réduction des biais algorithmiques',
-            'Transparence des systèmes décisionnels'
+        acteur1: 'etat',
+        acteur2: 'citoyens',
+        description: "L'État doit équilibrer son soutien à l'innovation en IA avec la protection des droits des citoyens. Les organisations de la société civile exercent une pression constante pour renforcer les garanties en matière de vie privée et de surveillance.",
+        exemples: [
+            "Consultations publiques sur la régulation de l'IA",
+            "Actions de la CNIL pour protéger les données personnelles",
+            "Mobilisations citoyennes contre les systèmes de reconnaissance faciale"
         ]
     },
     {
-        id: 'entreprises-citoyens',
-        acteurs: ['entreprises', 'citoyens'],
-        points_communs: [
-            'Applications bénéfiques de l\'IA au quotidien',
-            'Amélioration des services publics et privés'
+        acteur1: 'etat',
+        acteur2: 'academiques',
+        description: "Relation généralement collaborative entre l'État et le monde académique, avec un financement public substantiel de la recherche, mais des préoccupations persistent concernant la liberté académique et l'influence des intérêts commerciaux ou sécuritaires.",
+        exemples: [
+            "Création d'instituts de recherche spécialisés en IA",
+            "Financement de chaires universitaires",
+            "Transfert de technologies vers l'industrie"
         ]
     },
     {
-        id: 'etat-academiques',
-        acteurs: ['etat', 'academiques'],
-        points_communs: [
-            'Financement de la recherche fondamentale',
-            'Formation de spécialistes en IA',
-            'Transfert de technologie vers l\'industrie'
+        acteur1: 'entreprises',
+        acteur2: 'citoyens',
+        description: "Les entreprises tech doivent gagner la confiance des utilisateurs tout en développant des modèles économiques viables. Les associations de consommateurs et ONG surveillent activement les pratiques commerciales et les usages des données.",
+        exemples: [
+            "Débats sur la transparence algorithmique",
+            "Contestations des conditions d'utilisation des services d'IA",
+            "Initiatives d'IA éthique par des entreprises socialement responsables"
         ]
     },
     {
-        id: 'entreprises-academiques',
-        acteurs: ['entreprises', 'academiques'],
-        points_communs: [
-            'Partenariats recherche-industrie',
-            'Valorisation des innovations',
-            'Stages et recrutement de talents'
+        acteur1: 'entreprises',
+        acteur2: 'academiques',
+        description: "Coopération croissante entre industrie et recherche académique, avec des financements privés, des stages, et des projets communs, mais aussi des tensions autour de l'accès aux données, de la propriété intellectuelle et des priorités de recherche.",
+        exemples: [
+            "Laboratoires de recherche conjoints université-entreprise",
+            "Programmes de doctorants en entreprise (CIFRE)",
+            "Controverses sur la fuite des talents académiques vers le privé"
         ]
     },
     {
-        id: 'citoyens-academiques',
-        acteurs: ['citoyens', 'academiques'],
-        points_communs: [
-            'Diffusion des connaissances sur l\'IA',
-            'Réflexion éthique sur les applications',
-            'Débat public informé sur les enjeux'
-        ]
-    },
-    {
-        id: 'tous',
-        acteurs: ['etat', 'entreprises', 'citoyens', 'academiques'],
-        points_communs: [
-            'Développement d\'une IA européenne respectueuse des valeurs fondamentales',
-            'Équilibre entre innovation et protection',
-            'Cadre juridique adapté aux réalités technologiques'
+        acteur1: 'citoyens',
+        acteur2: 'academiques',
+        description: "La communauté académique joue un rôle crucial dans l'information du public sur les enjeux de l'IA et forme un contrepoids expert aux discours commerciaux. Les citoyens attendent des chercheurs qu'ils développent des technologies responsables.",
+        exemples: [
+            "Science ouverte et vulgarisation sur l'IA",
+            "Participation des chercheurs aux débats publics",
+            "Initiatives de sciences participatives impliquant les citoyens"
         ]
     }
 ];
 
-// Données pour l'analyse thématique
+// Données améliorées pour l'analyse thématique
 const themesAnalyse = [
     {
         titre: 'Tension entre compétitivité et éthique',
@@ -166,34 +271,72 @@ const themesAnalyse = [
         aspects: [
             'Vitesse d\'innovation vs rigueur réglementaire',
             'Attraction des talents vs conditions de travail européennes',
-            'Exploitation des données vs protection de la vie privée'
+            'Exploitation des données vs protection de la vie privée',
+            'Libre concurrence vs régulation préventive des risques'
         ]
     },
     {
-        titre: 'Autonomie stratégique',
-        description: 'L\'indépendance technologique est-elle possible face aux géants américains et chinois ?',
+        titre: 'Souveraineté technologique et infrastructures',
+        description: 'Quelles sont les conditions matérielles et stratégiques d\'une véritable indépendance européenne en matière d\'IA ?',
         aspects: [
-            'Développement d\'infrastructures européennes (cloud, calculateurs)',
-            'Autonomie dans les secteurs critiques (défense, santé, énergie)',
-            'Contrôle des chaînes d\'approvisionnement technologiques'
+            'Développement de clouds souverains et de supercalculateurs européens',
+            'Maîtrise des chaînes d\'approvisionnement en composants critiques',
+            'Contrôle des données stratégiques et création de lacs de données européens',
+            'Financement public massif vs dépendance aux capitaux privés internationaux'
         ]
     },
     {
-        titre: 'Modèle européen de l\'IA',
-        description: 'Existe-t-il une "troisième voie" européenne entre les modèles américain et chinois ?',
+        titre: 'Gouvernance de l\'IA et coopération internationale',
+        description: 'Comment l\'Europe peut-elle promouvoir sa vision régulatrice tout en participant aux forums internationaux sur l\'IA ?',
         aspects: [
-            'IA centrée sur l\'humain vs maximisation du profit',
-            'Approche précautionneuse vs innovation disruptive',
-            'Valeurs démocratiques intégrées dans la conception des systèmes'
+            'Effet Bruxelles : influence normative européenne à l\'international',
+            'Alliances stratégiques avec des partenaires partageant la même vision',
+            'Standards techniques communs et interopérabilité des systèmes',
+            'Équilibre entre protection du marché intérieur et coopération scientifique mondiale'
         ]
     }
 ];
+
+// Données pour la section À propos
+const aboutData = {
+    projectTitle: "Analyse de la controverse sur la souveraineté de l'IA en Europe",
+    description: "Ce projet vise à cartographier et analyser les débats autour de l'autonomie stratégique européenne dans le domaine de l'intelligence artificielle, en mettant en lumière les positions des différents acteurs, les événements clés et les enjeux sous-jacents.",
+    methodology: [
+        "Cartographie des acteurs et analyse de leurs positions",
+        "Chronologie des événements structurants du débat",
+        "Analyse des interactions entre parties prenantes",
+        "Identification des points de tension et de convergence",
+        "Étude des initiatives européennes et de leur réception"
+    ],
+    casesExamples: [
+        {
+            title: "L'AI Act européen",
+            description: "Premier cadre réglementaire mondial complet sur l'IA, cette législation illustre l'approche européenne basée sur les risques et centrée sur l'humain. Les débats autour de son élaboration révèlent les tensions entre protection des droits fondamentaux et promotion de l'innovation.",
+            acteurs: ["Commission européenne", "Parlement européen", "États membres", "Lobbyistes industriels", "Organisations de défense des droits numériques"]
+        },
+        {
+            title: "Le projet GAIA-X",
+            description: "Initiative franco-allemande visant à créer une infrastructure cloud européenne souveraine, GAIA-X incarne les ambitions d'autonomie numérique de l'Europe mais aussi les difficultés à concurrencer les géants américains du cloud.",
+            acteurs: ["Ministères français et allemand de l'Économie", "Entreprises européennes du numérique", "Utilisateurs industriels", "Big Tech américaines"]
+        },
+        {
+            title: "La controverse des modèles ouverts vs fermés",
+            description: "Le débat sur l'ouverture des modèles d'IA (open source vs propriétaires) cristallise les tensions entre sécurité, contrôle et innovation ouverte. L'Europe cherche sa voie entre ces approches antagonistes.",
+            acteurs: ["Développeurs open source", "Grandes entreprises d'IA", "Régulateurs", "Communauté académique"]
+        }
+    ],
+    team: [
+        { name: "Hamidou Diallo" },
+        { name: "Megane" },
+        { name: "Nelson Adebayo" }
+    ]
+};
 
 // Composant principal
 export default function ControverseIASite() {
     const [activeTab, setActiveTab] = useState('accueil');
     const [selectedActeur, setSelectedActeur] = useState(null);
-    const [selectedIntersection, setSelectedIntersection] = useState(null);
+    const [selectedInteraction, setSelectedInteraction] = useState(null);
 
     // Gestion du survol et de la sélection des acteurs
     const handleActeurHover = (acteurId) => {
@@ -204,17 +347,7 @@ export default function ControverseIASite() {
 
     const handleActeurClick = (acteurId) => {
         setSelectedActeur(acteurId === selectedActeur ? null : acteurId);
-    };
-
-    // Gestion du survol et de la sélection des intersections
-    const handleIntersectionHover = (intersectionId) => {
-        if (!selectedIntersection) {
-            setSelectedIntersection(intersectionId);
-        }
-    };
-
-    const handleIntersectionClick = (intersectionId) => {
-        setSelectedIntersection(intersectionId === selectedIntersection ? null : intersectionId);
+        setSelectedInteraction(null);
     };
 
     // Trouver un acteur par son ID
@@ -222,9 +355,18 @@ export default function ControverseIASite() {
         return acteursData.find(acteur => acteur.id === id);
     };
 
-    // Trouver une intersection par son ID
-    const getIntersectionById = (id) => {
-        return intersectionsData.find(intersection => intersection.id === id);
+    // Trouver une interaction impliquant deux acteurs
+    const getInteractionByActeurs = (acteur1Id, acteur2Id) => {
+        return interactionsData.find(interaction =>
+            (interaction.acteur1 === acteur1Id && interaction.acteur2 === acteur2Id) ||
+            (interaction.acteur1 === acteur2Id && interaction.acteur2 === acteur1Id)
+        );
+    };
+
+    // Mise à jour quand une arête est cliquée (interaction entre acteurs)
+    const handleEdgeClick = (acteur1Id, acteur2Id) => {
+        setSelectedInteraction({ acteur1: acteur1Id, acteur2: acteur2Id });
+        setSelectedActeur(null);
     };
 
     return (
@@ -234,7 +376,7 @@ export default function ControverseIASite() {
                 <div className="container header-content">
                     <h1 className="site-title">Souveraineté IA Europe</h1>
                     <div className="header-nav">
-                        <button className="header-button">À propos</button>
+                        <button className="header-button" onClick={() => setActiveTab('about')}>À propos</button>
                         <button className="header-button">Contact</button>
                     </div>
                 </div>
@@ -273,6 +415,12 @@ export default function ControverseIASite() {
                         onClick={() => setActiveTab('analyse')}
                     >
                         Analyse
+                    </button>
+                    <button
+                        className={`tab-button ${activeTab === 'about' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('about')}
+                    >
+                        À propos
                     </button>
                 </div>
 
@@ -390,6 +538,24 @@ export default function ControverseIASite() {
                                                 ))}
                                             </ul>
 
+                                            <h4>Citations représentatives:</h4>
+                                            <div className="acteur-citations">
+                                                {acteur.citations.map((citation, index) => (
+                                                    <div key={index} className="acteur-citation">
+                                                        <div className="citation-text">
+                                                            <Quote size={16} className="quote-icon" />
+                                                            {citation.texte}
+                                                        </div>
+                                                        <div className="citation-source">
+                                                            — {citation.auteur}, <span className="citation-context">{citation.source}</span>
+                                                            <a href={citation.url} className="citation-link" target="_blank" rel="noopener noreferrer">
+                                                                <ExternalLink size={14} />
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+
                                             <h4>Sous-acteurs:</h4>
                                             <div className="sous-acteurs-list">
                                                 {acteur.sous_acteurs.map((sousActeur, index) => (
@@ -437,19 +603,6 @@ export default function ControverseIASite() {
                         </p>
 
                         <div className="timeline-container">
-                            <ResponsiveContainer width="100%" height={250}>
-                                <LineChart
-                                    data={timelineData}
-                                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                                >
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="date" />
-                                    <YAxis label={{ value: 'Impact sur la controverse', angle: -90, position: 'insideLeft' }} />
-                                    <Tooltip />
-                                    <Line type="monotone" dataKey="impact" stroke="#10b981" activeDot={{ r: 8 }} />
-                                </LineChart>
-                            </ResponsiveContainer>
-
                             <div className="timeline-events">
                                 {timelineData.map((event, index) => (
                                     <div key={index} className="timeline-event">
@@ -460,24 +613,12 @@ export default function ControverseIASite() {
                                                 Impact: <span className="timeline-impact-value">{event.impact}/100</span>
                                             </div>
                                             <div className="timeline-description">
-                                                {index === 0 && (
-                                                    <p>La Commission européenne présente sa proposition d'AI Act, première tentative mondiale de réguler l'intelligence artificielle de manière globale, basée sur une approche par niveaux de risque.</p>
-                                                )}
-                                                {index === 1 && (
-                                                    <p>Les eurodéputés débattent de l'importance d'une autonomie stratégique dans les technologies numériques face aux géants américains et chinois. Émergence du concept de "souveraineté numérique européenne".</p>
-                                                )}
-                                                {index === 2 && (
-                                                    <p>Le lancement de ChatGPT bouleverse le débat public en démontrant les capacités avancées de l'IA générative, accélérant l'urgence d'une régulation adaptée et soulevant des questions sur le retard européen.</p>
-                                                )}
-                                                {index === 3 && (
-                                                    <p>Les États membres de l'UE expriment leurs positions sur la régulation de l'IA, certains favorisant l'innovation, d'autres insistant davantage sur la protection et les garde-fous éthiques.</p>
-                                                )}
-                                                {index === 4 && (
-                                                    <p>Accord historique sur l'AI Act européen, introduisant un cadre réglementaire inédit qui catégorise les systèmes d'IA selon leur niveau de risque et impose des obligations proportionnées.</p>
-                                                )}
-                                                {index === 5 && (
-                                                    <p>Début de la mise en œuvre progressive des premières dispositions de l'AI Act, avec des périodes de transition pour permettre aux entreprises et institutions de s'adapter.</p>
-                                                )}
+                                                <p>{event.description}</p>
+                                                <div className="timeline-source">
+                                                    <a href={event.source} target="_blank" rel="noopener noreferrer" className="timeline-source-link">
+                                                        Source <ExternalLink size={14} />
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -487,119 +628,85 @@ export default function ControverseIASite() {
                     </div>
                 )}
 
-                {/* Page des interactions */}
+                {/* Page des interactions - Remplacée par le réseau interactif D3 */}
                 {activeTab === 'interactions' && (
                     <div className="content-card">
                         <h2 className="card-title">Interactions entre les acteurs</h2>
                         <p className="home-text">
-                            Cette visualisation représente les points communs et divergences entre les différents acteurs de la controverse.
-                            Les zones d'intersection montrent les convergences d'intérêts ou d'opinion. Survolez ou cliquez sur une zone pour voir les détails.
+                            Cette visualisation représente les dynamiques d'interactions entre les différents acteurs de la controverse.
+                            Les liens entre les nœuds montrent l'intensité des relations et les points de tension ou de coopération.
+                            Cliquez sur un acteur ou un lien pour explorer ces interactions en détail.
                         </p>
 
-                        <div className="venn-container">
-                            <div className="venn-diagram">
-                                {/* Cercles représentant chaque acteur */}
-                                {acteursData.map((acteur, index) => {
-                                    // Positionnement des cercles selon leur ordre (à ajuster selon les besoins visuels)
-                                    const positions = [
-                                        { top: '30%', left: '25%' }, // État
-                                        { top: '30%', left: '65%' }, // Entreprises
-                                        { top: '60%', left: '25%' }, // Citoyens
-                                        { top: '60%', left: '65%' }  // Académiques
-                                    ];
+                        <div className="network-visualization">
+                            <NetworkGraph
+                                acteursData={acteursData}
+                                onNodeClick={handleActeurClick}
+                                selectedActeur={selectedActeur}
+                            />
 
-                                    return (
-                                        <div
-                                            key={acteur.id}
-                                            className={`venn-circle ${selectedActeur === acteur.id ? 'venn-selected' : ''}`}
-                                            style={{
-                                                backgroundColor: `${acteur.couleur}40`, // Couleur avec transparence
-                                                borderColor: acteur.couleur,
-                                                top: positions[index].top,
-                                                left: positions[index].left,
-                                                width: `${acteur.influence * 2}px`,
-                                                height: `${acteur.influence * 2}px`,
-                                                zIndex: selectedActeur === acteur.id ? 10 : 1
-                                            }}
-                                            onClick={() => handleActeurClick(acteur.id)}
-                                            onMouseEnter={() => handleActeurHover(acteur.id)}
-                                            onMouseLeave={() => !selectedActeur && setSelectedActeur(null)}
-                                        >
-                                            <span className="venn-label">{acteur.nom}</span>
-                                        </div>
-                                    );
-                                })}
-
-                                {/* Zones d'intersection (simplifiées) */}
-                                {intersectionsData.map((intersection, index) => {
-                                    // Positionnement des intersections (simplifié ici)
-                                    const getPosition = (id) => {
-                                        switch(id) {
-                                            case 'etat-entreprises': return { top: '30%', left: '45%' };
-                                            case 'etat-citoyens': return { top: '45%', left: '25%' };
-                                            case 'entreprises-citoyens': return { top: '45%', left: '45%' };
-                                            case 'etat-academiques': return { top: '45%', left: '35%' };
-                                            case 'entreprises-academiques': return { top: '45%', left: '65%' };
-                                            case 'citoyens-academiques': return { top: '60%', left: '45%' };
-                                            case 'tous': return { top: '45%', left: '45%' };
-                                            default: return { top: '50%', left: '50%' };
-                                        }
-                                    };
-
-                                    const position = getPosition(intersection.id);
-
-                                    // Ne pas afficher "tous" comme une zone distincte car c'est trop complexe visuellement
-                                    if (intersection.id === 'tous') return null;
-
-                                    return (
-                                        <div
-                                            key={intersection.id}
-                                            className={`venn-intersection ${selectedIntersection === intersection.id ? 'intersection-selected' : ''}`}
-                                            style={{
-                                                top: position.top,
-                                                left: position.left,
-                                                zIndex: selectedIntersection === intersection.id ? 20 : 5
-                                            }}
-                                            onClick={() => handleIntersectionClick(intersection.id)}
-                                            onMouseEnter={() => handleIntersectionHover(intersection.id)}
-                                            onMouseLeave={() => !selectedIntersection && setSelectedIntersection(null)}
-                                        >
-                                            <div className="intersection-point"></div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-
-                            <div className="interaction-details">
-                                {selectedActeur && !selectedIntersection && (
+                            <div className="interaction-details-panel">
+                                {selectedActeur && (
                                     <div className="acteur-details">
                                         <h3 style={{ color: getActeurById(selectedActeur).couleur }}>{getActeurById(selectedActeur).nom}</h3>
-                                        <p>{getActeurById(selectedActeur).description}</p>
-                                        <h4>Arguments clés:</h4>
-                                        <ul>
-                                            {getActeurById(selectedActeur).arguments.map((arg, index) => (
-                                                <li key={index}>{arg}</li>
-                                            ))}
+                                        <p className="interaction-description">{getActeurById(selectedActeur).description}</p>
+                                        <h4>Interactions principales:</h4>
+                                        <ul className="interaction-list">
+                                            {interactionsData
+                                                .filter(interaction => interaction.acteur1 === selectedActeur || interaction.acteur2 === selectedActeur)
+                                                .map((interaction, index) => {
+                                                    const otherActeurId = interaction.acteur1 === selectedActeur ? interaction.acteur2 : interaction.acteur1;
+                                                    const otherActeur = getActeurById(otherActeurId);
+                                                    return (
+                                                        <li key={index} className="interaction-item" onClick={() => setSelectedInteraction(interaction)}>
+                                                            <span className="interaction-with" style={{ color: otherActeur.couleur }}>
+                                                                Avec {otherActeur.nom}
+                                                            </span>
+                                                            <p className="interaction-brief">{interaction.description.split('.')[0]}.</p>
+                                                        </li>
+                                                    );
+                                                })}
                                         </ul>
                                     </div>
                                 )}
 
-                                {selectedIntersection && (
-                                    <div className="intersection-details">
-                                        <h3>Points communs entre {getIntersectionById(selectedIntersection).acteurs.map(id => getActeurById(id).nom).join(' et ')}</h3>
-                                        <ul>
-                                            {getIntersectionById(selectedIntersection).points_communs.map((point, index) => (
-                                                <li key={index}>{point}</li>
-                                            ))}
-                                        </ul>
+                                {selectedInteraction && (
+                                    <div className="interaction-full-details">
+                                        <h3>Interaction entre acteurs</h3>
+                                        <div className="interaction-actors">
+                                            <div className="interaction-actor" style={{ borderColor: getActeurById(selectedInteraction.acteur1).couleur }}>
+                                                {getActeurById(selectedInteraction.acteur1).nom}
+                                            </div>
+                                            <div className="interaction-connector">⟷</div>
+                                            <div className="interaction-actor" style={{ borderColor: getActeurById(selectedInteraction.acteur2).couleur }}>
+                                                {getActeurById(selectedInteraction.acteur2).nom}
+                                            </div>
+                                        </div>
+
+                                        <div className="interaction-content">
+                                            <p className="interaction-description">
+                                                {getInteractionByActeurs(selectedInteraction.acteur1, selectedInteraction.acteur2).description}
+                                            </p>
+
+                                            <h4>Exemples concrets:</h4>
+                                            <ul className="interaction-examples">
+                                                {getInteractionByActeurs(selectedInteraction.acteur1, selectedInteraction.acteur2).exemples.map((exemple, index) => (
+                                                    <li key={index}>{exemple}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+
+                                        <button className="interaction-back" onClick={() => setSelectedInteraction(null)}>
+                                            Retour aux acteurs
+                                        </button>
                                     </div>
                                 )}
 
-                                {!selectedActeur && !selectedIntersection && (
+                                {!selectedActeur && !selectedInteraction && (
                                     <div className="interaction-help">
-                                        <p>Survolez ou cliquez sur un acteur ou une intersection pour afficher plus d'informations.</p>
-                                        <p>Les cercles représentent les acteurs principaux, leur taille indique leur niveau d'influence dans le débat.</p>
-                                        <p>Les points d'intersection montrent les zones de convergence entre différents acteurs.</p>
+                                        <p>Cliquez sur un acteur dans le graphe pour explorer ses interactions avec les autres parties prenantes.</p>
+                                        <p>La taille des liens entre les acteurs représente l'intensité de leurs interactions.</p>
+                                        <p>Vous pouvez déplacer les nœuds pour réorganiser le graphe ou zoomer pour mieux visualiser.</p>
                                     </div>
                                 )}
                             </div>
@@ -663,6 +770,52 @@ export default function ControverseIASite() {
                                 <li>Prises de position des associations professionnelles du numérique, 2021-2024</li>
                                 <li>Analyses de l'Observatoire de l'IA du CNNUM, 2022-2024</li>
                             </ul>
+                        </div>
+                    </div>
+                )}
+
+                {/* Page À propos */}
+                {activeTab === 'about' && (
+                    <div className="content-card">
+                        <h2 className="card-title">À propos du projet</h2>
+
+                        <div className="about-section">
+                            <h3 className="about-subtitle">Présentation</h3>
+                            <p className="about-text">{aboutData.description}</p>
+
+                            <h3 className="about-subtitle">Méthodologie</h3>
+                            <ul className="about-list">
+                                {aboutData.methodology.map((method, index) => (
+                                    <li key={index} className="about-list-item">{method}</li>
+                                ))}
+                            </ul>
+
+                            <h3 className="about-subtitle">Cas d'étude spécifiques</h3>
+                            <div className="about-cases">
+                                {aboutData.casesExamples.map((caseExample, index) => (
+                                    <div key={index} className="about-case-card">
+                                        <h4 className="about-case-title">{caseExample.title}</h4>
+                                        <p className="about-case-description">{caseExample.description}</p>
+                                        <div className="about-case-acteurs">
+                                            <h5>Acteurs impliqués:</h5>
+                                            <div className="about-case-acteurs-list">
+                                                {caseExample.acteurs.map((acteur, idx) => (
+                                                    <span key={idx} className="about-case-acteur">{acteur}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <h3 className="about-subtitle">L'équipe</h3>
+                            <div className="about-team">
+                                {aboutData.team.map((member, index) => (
+                                    <div key={index} className="about-team-member">
+                                        <div className="about-team-name">{member.name}</div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 )}
