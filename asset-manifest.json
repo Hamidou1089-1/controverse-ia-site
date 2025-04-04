@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/controverse-ia-site/static/css/main.06a02e36.css",
-    "main.js": "/controverse-ia-site/static/js/main.2007dcc3.js",
+    "main.css": "/controverse-ia-site/static/css/main.6dd70b5c.css",
+    "main.js": "/controverse-ia-site/static/js/main.08fb8b56.js",
     "static/js/453.e209ae8f.chunk.js": "/controverse-ia-site/static/js/453.e209ae8f.chunk.js",
     "index.html": "/controverse-ia-site/index.html",
-    "main.06a02e36.css.map": "/controverse-ia-site/static/css/main.06a02e36.css.map",
-    "main.2007dcc3.js.map": "/controverse-ia-site/static/js/main.2007dcc3.js.map",
+    "main.6dd70b5c.css.map": "/controverse-ia-site/static/css/main.6dd70b5c.css.map",
+    "main.08fb8b56.js.map": "/controverse-ia-site/static/js/main.08fb8b56.js.map",
     "453.e209ae8f.chunk.js.map": "/controverse-ia-site/static/js/453.e209ae8f.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.06a02e36.css",
-    "static/js/main.2007dcc3.js"
+    "static/css/main.6dd70b5c.css",
+    "static/js/main.08fb8b56.js"
   ]
 }
